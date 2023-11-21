@@ -5,17 +5,36 @@ import { getTileRange, getTileSize, getZoomScale } from '../business/map/calcula
 import { generatePointListInRange } from '../util/point.ts';
 import { ORIGINAL_TILE_SIZE } from '../business/map/constants.ts';
 import { isValidLevel } from '../business/map/validator.ts';
+import { Point } from '../type/Point.ts';
 
 export const App = component$(() => {
   const level = useSignal(5);
 
   const tileSize = getTileSize(level.value);
   const scale = getZoomScale(level.value);
-  const leftTop = { x: 300, y: 600 };
 
-  const windowRect = calculateWindowRect(leftTop, innerWidth, innerHeight);
+  const left = useSignal(0);
+  const top = useSignal(0);
+  const originPoint = useSignal<Point>({ x: 0, y: 0 });
+
+  const windowRect = calculateWindowRect({ x: left.value, y: top.value }, innerWidth, innerHeight);
   const { start, last } = getTileRange(tileSize, windowRect);
   const tilePoints = generatePointListInRange(start, last);
+
+  const mouseMoveHandler = (e: MouseEvent) => {
+    left.value = originPoint.value.x - e.clientX;
+    top.value = originPoint.value.y - e.clientY;
+
+  };
+
+  window.addEventListener('mousedown', (e) => {
+    originPoint.value = { x: left.value + e.clientX, y: top.value + e.clientY };
+    window.addEventListener('mousemove', mouseMoveHandler);
+  });
+
+  window.addEventListener('mouseup', () => {
+    window.removeEventListener('mousemove', mouseMoveHandler);
+  });
 
   return (
     <>
@@ -24,13 +43,14 @@ export const App = component$(() => {
         position: 'relative',
         width: '100vw',
         height: '100vh',
+        overflow: 'hidden',
       }}>
         <div
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
-            transform: `translate(-${leftTop.x}px, -${leftTop.y}px) scale(${scale})`,
+            transform: `translate(${-1 * left.value}px, ${-1 * top.value}px) scale(${scale})`,
           }}>
           {tilePoints.map(({ x, y }) =>
             <div
