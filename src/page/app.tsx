@@ -4,8 +4,8 @@ import { getTileRange, getTileSize, getZoomScale } from '../business/map/calcula
 import { generatePointListInRange } from '../util/point.ts';
 import { ORIGINAL_TILE_SIZE } from '../business/map/constants.ts';
 import { isValidLevel } from '../business/map/validator.ts';
-import { Point } from '../type/Point.ts';
 import { makeRect } from '../util/rect.ts';
+import { getDraggableLayerPointHandlers } from '../util/mouse_drag.ts';
 
 export const App = component$(() => {
   const level = useSignal(5);
@@ -15,24 +15,23 @@ export const App = component$(() => {
 
   const left = useSignal(0);
   const top = useSignal(0);
-  const originPoint = useSignal<Point>({ x: 0, y: 0 });
 
   const windowRect = makeRect({ x: left.value, y: top.value }, innerWidth, innerHeight);
-  const { start, last } = getTileRange(tileSize, windowRect);
+  const { start, last } = getTileRange(tileSize, windowRect, 5);
   const tilePoints = generatePointListInRange(start, last);
 
-  const mouseMoveHandler = (e: MouseEvent) => {
-    left.value = originPoint.value.x - e.clientX;
-    top.value = originPoint.value.y - e.clientY;
-  };
+  const { onMouseDown, onMouseMove } = getDraggableLayerPointHandlers((point) => {
+    left.value = point.x;
+    top.value = point.y;
+  });
 
   window.addEventListener('mousedown', (e) => {
-    originPoint.value = { x: left.value + e.clientX, y: top.value + e.clientY };
-    window.addEventListener('mousemove', mouseMoveHandler);
+    onMouseDown({ x: left.value, y: top.value }, e.clientX, e.clientY);
+    window.addEventListener('mousemove', onMouseMove);
   });
 
   window.addEventListener('mouseup', () => {
-    window.removeEventListener('mousemove', mouseMoveHandler);
+    window.removeEventListener('mousemove', onMouseMove);
   });
 
   return (
@@ -49,9 +48,7 @@ export const App = component$(() => {
             position: 'absolute',
             top: 0,
             left: 0,
-            transform: `translate(${-1 * left.value}px, ${-1 * top.value}px)`,
-            scale: scale,
-            // transition: 'scale 0.5s',
+            transform: `translate(${-1 * left.value}px, ${-1 * top.value}px) scale(${scale})`,
           }}>
           {tilePoints.map(({ x, y }) =>
             <div
