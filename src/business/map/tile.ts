@@ -3,5 +3,5 @@ export const isValidPoint = (x: number, y: number) => {
 };
 
 export const getFileName = (x: number, y: number) => {
-  return `/tile/0/tile${(x + 7 * y).toString().padStart(3, '0')}.png`;
+  return `/map/tile/0/tile${(x + 7 * y).toString().padStart(3, '0')}.png`;
 };
