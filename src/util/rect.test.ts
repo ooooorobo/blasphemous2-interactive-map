@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { Point } from '../../type/Point.ts';
-import { calculateWindowRect } from './calculator.ts';
+import { makeRect } from './rect.ts';
+import { Point } from '../type/Point.ts';
 
-describe('calculateWindowRect', () => {
+describe('makeRect', () => {
   test.each([[
     { leftTop: { x: 0, y: 0 }, width: 1000, height: 500 }, { left: 0, top: 0, right: 1000, bottom: 500 },
   ], [
@@ -12,7 +12,7 @@ describe('calculateWindowRect', () => {
     width: number,
     height: number
   }, expectedRect) => {
-    const result = calculateWindowRect(leftTop, width, height);
+    const result = makeRect(leftTop, width, height);
 
     expect(result).toEqual(expectedRect);
   });
