@@ -11,18 +11,19 @@ export const App = component$(() => {
   const leftTop = useStore<Point>({ x: 0, y: 0 });
 
   return (
-    <>
+    <div style={{ width: '100%', height: '100%' }}>
       <div style={{
         position: 'relative',
         width: '100dvw',
         height: '100dvh',
         overflow: 'hidden',
+        touchAction: 'none',
       }}>
         <DraggableLayerContainer leftTop={leftTop} level={level.value}>
           <MapTileLayer leftTop={leftTop} level={level.value} />
         </DraggableLayerContainer>
       </div>
       <ToolBoxContainer level={level} leftTop={leftTop} />
-    </>
+    </div>
   );
 });
