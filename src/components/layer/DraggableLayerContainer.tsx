@@ -30,8 +30,17 @@ export const DraggableLayerContainer = component$(({ level, leftTop }: Props) =>
       position: 'absolute',
       top: 0,
       left: 0,
-      transform: `translate(${-1 * leftTop.x}px, ${-1 * leftTop.y}px) scale(${scale})`,
+      transform: `translate(${-1 * leftTop.x}px, ${-1 * leftTop.y}px)`,
     }}>
-    <Slot />
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        transform: `scale(${scale})`,
+        transition: 'transform 0.5s',
+      }}>
+      <Slot />
+    </div>
   </div>;
 });
