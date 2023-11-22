@@ -16,13 +16,13 @@ export const DraggableLayerContainer = component$(({ level, leftTop }: Props) =>
     leftTop.y = point.y;
   });
 
-  window.addEventListener('mousedown', (e) => {
+  window.addEventListener('pointerdown', (e) => {
     onMouseDown(leftTop, e.clientX, e.clientY);
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('pointermove', onMouseMove);
   });
 
-  window.addEventListener('mouseup', () => {
-    window.removeEventListener('mousemove', onMouseMove);
+  window.addEventListener('pointerup', () => {
+    window.removeEventListener('pointermove', onMouseMove);
   });
 
   return <div
