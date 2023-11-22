@@ -5,7 +5,7 @@ export const getDraggableLayerPointHandlers = (onNewPoint: (newPoint: Point) => 
   let clientOriginPoint: Point;
 
   const onMouseDown = (currentOriginPoint: Point, clientX: number, clientY: number) => {
-    originPoint = currentOriginPoint;
+    originPoint = Object.assign({}, currentOriginPoint);
     clientOriginPoint = { x: clientX, y: clientY };
   };
 
