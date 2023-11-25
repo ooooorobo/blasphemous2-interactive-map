@@ -6,6 +6,6 @@
  */
 
 export const ORIGINAL_TILE_SIZE = 1024; // px
-export const MAX_ZOOM_SCALE = 16;
-export const MAX_ZOOM_LEVEL = 5;
+export const MAX_ZOOM_SCALE = 2;
+export const MAX_ZOOM_LEVEL = 2;
 export const MIN_TILE_RANGE = 0;

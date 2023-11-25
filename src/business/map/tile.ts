@@ -1,7 +1,17 @@
-export const isValidPoint = (x: number, y: number) => {
-  return x < 7 && (x + 7 * y) <= 41;
+const columnCount: Record<string, number> = {
+  '0': 10,
+  '1': 5,
+  '2': 3,
 };
 
-export const getFileName = (x: number, y: number) => {
-  return `/map/tile/0/tile${(x + 7 * y).toString().padStart(3, '0')}.png`;
+export const isValidPoint = (x: number, y: number, columnCount: number) => {
+  return x < columnCount && (x + columnCount * y) <= 100;
+};
+
+export const getColumnCount = (level: number) => {
+  return columnCount[level.toString()] ?? 0;
+};
+
+export const getFileName = (x: number, y: number, level: number) => {
+  return `/map/tile/${level}/tile${(x + getColumnCount(level) * y).toString().padStart(3, '0')}.png`;
 };
