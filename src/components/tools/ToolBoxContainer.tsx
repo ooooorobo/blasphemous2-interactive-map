@@ -1,7 +1,7 @@
 import { component$, Signal } from '@builder.io/qwik';
 import { isValidLevel } from '../../business/map/validator.ts';
 import { Point } from '../../type/Point.ts';
-import { convert } from '../../business/map/calculator.ts';
+import { convertPointToOtherLeftTop } from '../../util/point.ts';
 
 type Props = {
   level: Signal<number>;
@@ -12,7 +12,7 @@ type Props = {
 
 export const ToolBoxContainer = component$(({ level, screenLeftTop, mapLeftTop, onClickPoint }: Props) => {
   window.addEventListener('click', ({ clientX, clientY }) => {
-    const clickedPoint = convert({ x: clientX, y: clientY }, screenLeftTop, mapLeftTop);
+    const clickedPoint = convertPointToOtherLeftTop({ x: clientX, y: clientY }, screenLeftTop, mapLeftTop);
     onClickPoint({ x: Math.floor(clickedPoint.x), y: Math.floor(clickedPoint.y) });
   });
 

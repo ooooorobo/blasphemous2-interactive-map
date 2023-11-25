@@ -31,6 +31,3 @@ export const getTileRange = ({ tileSize = 1024, mapLeftTop = { x: 0, y: 0 }, win
   return { start, last };
 };
 
-export const convert = (point: Point, screenLeftTop: Point, mapLeftTop: Point) => {
-  return { x: point.x + screenLeftTop.x - mapLeftTop.x, y: point.y + screenLeftTop.y - mapLeftTop.y };
-};

@@ -6,8 +6,9 @@ import { Point } from '../type/Point.ts';
 import { ToolBoxContainer } from '../components/tools/ToolBoxContainer.tsx';
 import { MAX_ZOOM_LEVEL, ORIGINAL_MAP_HEIGHT, ORIGINAL_MAP_WIDTH } from '../business/map/constants.ts';
 import { isValidLevel } from '../business/map/validator.ts';
-import { convert, getZoomScale } from '../business/map/calculator.ts';
+import { getZoomScale } from '../business/map/calculator.ts';
 import { MarkerList } from '../data/marker.ts';
+import { convertLeftTopBy, convertPointToOtherLeftTop } from '../util/point.ts';
 
 export const App = component$(() => {
   const level = useSignal(MAX_ZOOM_LEVEL);
@@ -17,21 +18,16 @@ export const App = component$(() => {
   const mapLeftTop = useStore<Point>({ x: -(ORIGINAL_MAP_WIDTH - innerWidth) / 2, y: -(ORIGINAL_MAP_HEIGHT - innerHeight) / 2 });
   const markerList = useStore<Point[]>([]);
 
-  const setLevel = $((action: 'ZOOM_IN' | 'ZOOM_OUT', point: Point) => {
-    const changedLevel = level.value + 1 * (action === 'ZOOM_IN' ? -1 : 1);
+  const onWheel = $(({ deltaY, clientX, clientY }: QwikWheelEvent) => {
+    const changedLevel = level.value + 1 * (deltaY > 0 ? -1 : 1);
     if (!isValidLevel(changedLevel)) return;
 
+    const point = convertPointToOtherLeftTop({ x: clientX, y: clientY }, screenLeftTop, mapLeftTop);
     const scaleRatio = getZoomScale(changedLevel) / getZoomScale(level.value);
-    const newMapLeftTop = { x: mapLeftTop.x - point.x * (scaleRatio - 1), y: mapLeftTop.y - point.y * (scaleRatio - 1) };
+    const newMapLeftTop = convertLeftTopBy(mapLeftTop, point, scaleRatio);
     mapLeftTop.x = newMapLeftTop.x;
     mapLeftTop.y = newMapLeftTop.y;
-
     level.value = changedLevel;
-  });
-
-  const onWheel = $(({ deltaY, clientX, clientY }: QwikWheelEvent) => {
-    const point = convert({ x: clientX, y: clientY }, screenLeftTop, mapLeftTop);
-    setLevel(deltaY > 0 ? 'ZOOM_OUT' : 'ZOOM_IN', point);
   });
 
   return (
