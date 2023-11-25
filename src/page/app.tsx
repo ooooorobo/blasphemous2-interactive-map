@@ -7,9 +7,11 @@ import { ToolBoxContainer } from '../components/tools/ToolBoxContainer.tsx';
 import { MAX_ZOOM_LEVEL, ORIGINAL_MAP_HEIGHT, ORIGINAL_MAP_WIDTH } from '../business/map/constants.ts';
 import { isValidLevel } from '../business/map/validator.ts';
 import { convert, getZoomScale } from '../business/map/calculator.ts';
+import { MarkerList } from '../data/marker.ts';
 
 export const App = component$(() => {
   const level = useSignal(MAX_ZOOM_LEVEL);
+  const scale = getZoomScale(level.value);
 
   const screenLeftTop = useStore<Point>({ x: 0, y: 0 });
   const mapLeftTop = useStore<Point>({ x: -(ORIGINAL_MAP_WIDTH - innerWidth) / 2, y: -(ORIGINAL_MAP_HEIGHT - innerHeight) / 2 });
@@ -49,6 +51,19 @@ export const App = component$(() => {
                 style={{ position: 'absolute', transform: `translate(${mapLeftTop.x + point.x}px, ${mapLeftTop.y + point.y}px)`, fontSize: '24px' }}>
                 ({point.x}, {point.y})
               </div>
+            ))}
+            {MarkerList.map(({ position }) => (
+              <div
+                style={{
+                  position: 'absolute',
+                  transform: `translate(${mapLeftTop.x + position.x * scale - 12}px, ${mapLeftTop.y + position.y * scale - 12}px)`,
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '999px',
+                  backgroundColor: 'white',
+                }}
+                onClick$={() => console.log(position, scale)}
+              />
             ))}
           </div>
         </DraggableLayerContainer>

@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { ORIGINAL_TILE_SIZE } from '../../business/map/constants.ts';
-import { getTileRange, getTileSize } from '../../business/map/calculator.ts';
+import { getTileRange, getZoomScale } from '../../business/map/calculator.ts';
 import { generatePointListInRange } from '../../util/point.ts';
 import { makeRect } from '../../util/rect.ts';
 import { Point } from '../../type/Point.ts';
@@ -14,7 +14,7 @@ type Props = {
 
 export const MapTileLayer = component$(({ level, screenLeftTop, mapLeftTop }: Props) => {
   const windowRect = makeRect(screenLeftTop, innerWidth, innerHeight);
-  const tileSize = getTileSize(level);
+  const tileSize = getZoomScale(level) * ORIGINAL_TILE_SIZE;
 
   const { start, last } = getTileRange({ tileSize, mapLeftTop, windowRect, padding: 3 });
   const tilePoints = generatePointListInRange(start, last);
