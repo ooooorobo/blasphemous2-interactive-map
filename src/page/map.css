@@ -1,0 +1,42 @@
+
+#map {
+    --tile-size: 1024px;
+    --marker-size: 24px;
+
+    position: relative;
+    width: 100dvw;
+    width: 100vw;
+    height: 100dvh;
+    height: 100vh;
+    overflow: hidden;
+    touch-action: none;
+}
+
+#map .layer_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#map .layer_container .tile_layer {
+}
+
+#map .layer_container .marker_layer {
+}
+
+.tile_layer .tile {
+    user-select: none;
+    position: absolute;
+    width: var(--tile-size);
+    height: var(--tile-size);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.marker_layer .marker {
+    width: var(--marker-size);
+    height: var(--marker-size);
+    position: absolute;
+    border-radius: 999px;
+    background-color: white;
+}

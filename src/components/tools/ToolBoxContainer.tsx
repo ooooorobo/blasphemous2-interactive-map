@@ -1,21 +1,13 @@
 import { component$, Signal } from '@builder.io/qwik';
 import { isValidLevel } from '../../business/map/validator.ts';
 import { Point } from '../../type/Point.ts';
-import { convertPointToOtherLeftTop } from '../../util/point.ts';
 
 type Props = {
   level: Signal<number>;
   screenLeftTop: Point;
-  mapLeftTop: Point;
-  onClickPoint: (clickedPoint: Point) => void;
 }
 
-export const ToolBoxContainer = component$(({ level, screenLeftTop, mapLeftTop, onClickPoint }: Props) => {
-  window.addEventListener('click', ({ clientX, clientY }) => {
-    const clickedPoint = convertPointToOtherLeftTop({ x: clientX, y: clientY }, screenLeftTop, mapLeftTop);
-    onClickPoint({ x: Math.floor(clickedPoint.x), y: Math.floor(clickedPoint.y) });
-  });
-
+export const ToolBoxContainer = component$(({ level, screenLeftTop }: Props) => {
   return <div style={{ position: 'fixed', top: 0, left: 0, backgroundColor: 'white', color: 'black' }}>
     <strong>tools</strong>
     <div>

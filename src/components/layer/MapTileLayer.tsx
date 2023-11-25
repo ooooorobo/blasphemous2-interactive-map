@@ -18,24 +18,24 @@ export const MapTileLayer = component$(({ level, screenLeftTop, mapLeftTop }: Pr
   const { start, last } = getTileRange({ mapLeftTop, windowRect, padding: 3 });
   const tilePoints = generatePointListInRange(start, last);
 
-  return <div>
+  return <div class={'tile_layer'}>
     {tilePoints.map(({ x, y }) =>
       isValidPoint(x, y, getColumnCount(level)) && <MapTile x={x} y={y} level={level} mapLeftTop={mapLeftTop} />,
     )}
   </div>;
 });
 
-const MapTile = component$(({ x, y, level, mapLeftTop }: { x: number, y: number; level: number, mapLeftTop: Point }) => (
+const MapTile = component$(({ x, y, level, mapLeftTop }: {
+  x: number,
+  y: number;
+  level: number,
+  mapLeftTop: Point
+}) => (
   <div
     key={x + ',' + y}
+    class={'tile'}
     style={{
-      userSelect: 'none',
-      position: 'absolute',
       transform: `translate(${mapLeftTop.x + x * ORIGINAL_TILE_SIZE}px, ${mapLeftTop.y + y * ORIGINAL_TILE_SIZE}px)`,
-      width: ORIGINAL_TILE_SIZE,
-      height: ORIGINAL_TILE_SIZE,
-      backgroundSize: 'contain',
-      backgroundRepeat: 'no-repeat',
       backgroundImage: `url(${getFileName(x, y, level)}`,
     }}>
     {x}, {y}
