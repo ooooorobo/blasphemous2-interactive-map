@@ -34,9 +34,11 @@
 }
 
 .marker_layer .marker {
-    width: var(--marker-size);
+    /*width: var(--marker-size);*/
     height: var(--marker-size);
     position: absolute;
     border-radius: 999px;
-    background-color: white;
+    background-color: darkgray;
+    color: black;
+    padding: 0 4px;
 }

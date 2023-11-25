@@ -11,13 +11,13 @@ type Props = {
 export const MarkerLayer = component$(({ markerList, mapLeftTop, scale }: Props) => {
   return (
     <div class={'marker_layer'}>
-      {markerList.map(({ position }) => (
+      {markerList.map(({ position, type }) => (
         <div
           class={'marker'}
           style={{
             transform: `translate(${mapLeftTop.x + position.x * scale - 12}px, ${mapLeftTop.y + position.y * scale - 12}px)`,
           }}
-        />
+        >{type}</div>
       ))}
     </div>
   );

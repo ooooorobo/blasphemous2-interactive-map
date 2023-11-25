@@ -1,6 +1,7 @@
 import { component$, Slot } from '@builder.io/qwik';
 import { getDraggableLayerPointHandlers } from '../../util/mouse_drag.ts';
 import { Point } from '../../type/Point.ts';
+import { localStorageKey } from '../../page/app.tsx';
 
 type Props = {
   level: number;
@@ -9,6 +10,7 @@ type Props = {
 
 export const DraggableLayerContainer = component$(({ screenLeftTop }: Props) => {
   const { onMouseDown, onMouseMove } = getDraggableLayerPointHandlers((point) => {
+    localStorage.setItem(localStorageKey, JSON.stringify(screenLeftTop));
     screenLeftTop.x = point.x;
     screenLeftTop.y = point.y;
   });

@@ -12,11 +12,20 @@ import { MarkerList } from '../data/marker.ts';
 import { convertLeftTopBy, convertPointToOtherLeftTop } from '../util/point.ts';
 import { MarkerLayer } from '../components/layer/MarkerLayer.tsx';
 
+export const localStorageKey = 'screenLeftTop';
+
 export const App = component$(() => {
   const level = useSignal(MAX_ZOOM_LEVEL);
   const scale = getZoomScale(level.value);
 
-  const screenLeftTop = useStore<Point>({ x: 0, y: 0 });
+  const screenLeftTop = useStore<Point>(() => {
+    const defaultPosition = { x: 0, y: 0 };
+    try {
+      return JSON.parse(localStorage.getItem(localStorageKey) ?? JSON.stringify(defaultPosition));
+    } catch (e) {
+      return;
+    }
+  });
   const mapLeftTop = useStore<Point>({ x: -(ORIGINAL_MAP_WIDTH - innerWidth) / 2, y: -(ORIGINAL_MAP_HEIGHT - innerHeight) / 2 });
 
   const onWheel = $(({ deltaY, clientX, clientY }: QwikWheelEvent) => {
