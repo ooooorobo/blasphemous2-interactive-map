@@ -4,14 +4,14 @@ import { MapTileLayer } from '../components/layer/MapTileLayer.tsx';
 import { DraggableLayerContainer } from '../components/layer/DraggableLayerContainer.tsx';
 import { Point } from '../type/Point.ts';
 import { ToolBoxContainer } from '../components/tools/ToolBoxContainer.tsx';
-import { MAX_ZOOM_LEVEL } from '../business/map/constants.ts';
-import { throttle } from 'lodash-es';
+import { MAX_ZOOM_LEVEL, ORIGINAL_MAP_HEIGHT, ORIGINAL_MAP_WIDTH } from '../business/map/constants.ts';
 import { isValidLevel } from '../business/map/validator.ts';
 
 export const App = component$(() => {
   const level = useSignal(MAX_ZOOM_LEVEL);
 
   const screenLeftTop = useStore<Point>({ x: 0, y: 0 });
+  const mapLeftTop = useStore<Point>({ x: -(ORIGINAL_MAP_WIDTH - innerWidth) / 2, y: -(ORIGINAL_MAP_HEIGHT - innerHeight) / 2 });
   const markerList = useStore<Point[]>([]);
 
   const debouncedLevelHandler = throttle((action: 'ZOOM_IN' | 'ZOOM_OUT') => {
@@ -33,11 +33,11 @@ export const App = component$(() => {
         touchAction: 'none',
       }}>
         <DraggableLayerContainer screenLeftTop={screenLeftTop} level={level.value}>
-          <MapTileLayer screenLeftTop={screenLeftTop} level={level.value} />
+          <MapTileLayer screenLeftTop={screenLeftTop} mapLeftTop={mapLeftTop} level={level.value} />
           <div>
             {markerList.map(point => (
               <div
-                style={{ position: 'absolute', transform: `translate(${point.x}px, ${point.y}px)`, fontSize: '24px' }}>
+                style={{ position: 'absolute', transform: `translate(${mapLeftTop.x + point.x}px, ${mapLeftTop.y + point.y}px)`, fontSize: '24px' }}>
                 ({point.x}, {point.y})
               </div>
             ))}
@@ -47,6 +47,7 @@ export const App = component$(() => {
       <ToolBoxContainer
         level={level}
         screenLeftTop={screenLeftTop}
+        mapLeftTop={mapLeftTop}
         onClickPoint={$((point: Point) => {
           markerList.push(point);
         })} />

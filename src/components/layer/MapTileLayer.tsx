@@ -9,29 +9,30 @@ import { getColumnCount, getFileName, isValidPoint } from '../../business/map/ti
 type Props = {
   level: number;
   screenLeftTop: Point;
+  mapLeftTop: Point;
 }
 
-export const MapTileLayer = component$(({ level, screenLeftTop }: Props) => {
+export const MapTileLayer = component$(({ level, screenLeftTop, mapLeftTop }: Props) => {
   const windowRect = makeRect(screenLeftTop, innerWidth, innerHeight);
   const tileSize = getTileSize(level);
 
-  const { start, last } = getTileRange(tileSize, windowRect, 3);
+  const { start, last } = getTileRange({ tileSize, mapLeftTop, windowRect, padding: 3 });
   const tilePoints = generatePointListInRange(start, last);
 
   return <div>
     {tilePoints.map(({ x, y }) =>
-      isValidPoint(x, y, getColumnCount(level)) && <MapTile x={x} y={y} level={level} />,
+      isValidPoint(x, y, getColumnCount(level)) && <MapTile x={x} y={y} level={level} mapLeftTop={mapLeftTop} />,
     )}
   </div>;
 });
 
-const MapTile = component$(({ x, y, level }: { x: number, y: number; level: number }) => (
+const MapTile = component$(({ x, y, level, mapLeftTop }: { x: number, y: number; level: number, mapLeftTop: Point }) => (
   <div
     key={x + ',' + y}
     style={{
       userSelect: 'none',
       position: 'absolute',
-      transform: `translate(${x * ORIGINAL_TILE_SIZE}px, ${y * ORIGINAL_TILE_SIZE}px)`,
+      transform: `translate(${mapLeftTop.x + x * ORIGINAL_TILE_SIZE}px, ${mapLeftTop.y + y * ORIGINAL_TILE_SIZE}px)`,
       width: ORIGINAL_TILE_SIZE,
       height: ORIGINAL_TILE_SIZE,
       backgroundSize: 'contain',

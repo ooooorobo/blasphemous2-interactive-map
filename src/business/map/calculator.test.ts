@@ -48,7 +48,7 @@ describe('getTileRange', () => {
     [1000, { left: 300, top: 300, right: 2300, bottom: 2300 }, { x: 0, y: 0 }, { x: 2, y: 2 }],
     [1000, { left: -300, top: -300, right: 2300, bottom: 2300 }, { x: 0, y: 0 }, { x: 2, y: 2 }],
   ])('%s %s %s %s', (tileSize, windowRect, expectedStart, expectedLast) => {
-    const { start, last } = getTileRange(tileSize, windowRect);
+    const { start, last } = getTileRange({ tileSize, windowRect });
 
     expect(start).toEqual(expectedStart);
     expect(last).toEqual(expectedLast);

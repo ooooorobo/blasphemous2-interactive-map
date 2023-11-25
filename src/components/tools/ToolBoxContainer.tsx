@@ -1,21 +1,18 @@
 import { component$, Signal } from '@builder.io/qwik';
 import { isValidLevel } from '../../business/map/validator.ts';
 import { Point } from '../../type/Point.ts';
-import { getZoomScale } from '../../business/map/calculator.ts';
+import { convert } from '../../business/map/calculator.ts';
 
 type Props = {
   level: Signal<number>;
   screenLeftTop: Point;
+  mapLeftTop: Point;
   onClickPoint: (clickedPoint: Point) => void;
 }
 
-export const ToolBoxContainer = component$(({ level, screenLeftTop, onClickPoint }: Props) => {
-  const scale = getZoomScale(level.value);
+export const ToolBoxContainer = component$(({ level, screenLeftTop, mapLeftTop, onClickPoint }: Props) => {
   window.addEventListener('click', ({ clientX, clientY }) => {
-    const clickedPoint = {
-      x: Math.floor((screenLeftTop.x + clientX) / scale),
-      y: Math.floor((screenLeftTop.y + clientY) / scale),
-    };
+    const clickedPoint = convert({ x: clientX, y: clientY }, screenLeftTop, mapLeftTop);
     onClickPoint(clickedPoint);
   });
 
