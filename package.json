@@ -10,6 +10,7 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "eslint": "^8.54.0",
@@ -20,6 +21,7 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
-    "@builder.io/qwik": "^1.2.17"
+    "@builder.io/qwik": "^1.2.17",
+    "lodash-es": "^4.17.21"
   }
 }
