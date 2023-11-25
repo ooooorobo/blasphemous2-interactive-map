@@ -10,10 +10,10 @@ export const getZoomScale = (level: number, maxZoomScale = MAX_ZOOM_SCALE, maxZo
   return maxZoomScale * 2 ** -level;
 };
 
-export const getTileRange = ({ tileSize, mapLeftTop = { x: 0, y: 0 }, windowRect, padding = 0, minTileRange = MIN_TILE_RANGE }: {
-  tileSize: number,
-  mapLeftTop?: Point,
+export const getTileRange = ({ tileSize = 1024, mapLeftTop = { x: 0, y: 0 }, windowRect, padding = 0, minTileRange = MIN_TILE_RANGE }: {
   windowRect: Rect,
+  tileSize?: number,
+  mapLeftTop?: Point,
   padding?: number,
   minTileRange?: number
 }): {
