@@ -4,9 +4,13 @@ import { MapTileLayer } from '../components/layer/MapTileLayer.tsx';
 import { DraggableLayerContainer } from '../components/layer/DraggableLayerContainer.tsx';
 import { Point } from '../type/Point.ts';
 import { ToolBoxContainer } from '../components/tools/ToolBoxContainer.tsx';
+import { MAX_ZOOM_LEVEL } from '../business/map/constants.ts';
+import { isValidLevel } from '../business/map/validator.ts';
 
 export const App = component$(() => {
-  const level = useSignal(5);
+  const level = useSignal(MAX_ZOOM_LEVEL);
+
+  const screenLeftTop = useStore<Point>({ x: 0, y: 0 });
 
   const leftTop = useStore<Point>({ x: 0, y: 0 });
 
@@ -19,11 +23,11 @@ export const App = component$(() => {
         overflow: 'hidden',
         touchAction: 'none',
       }}>
-        <DraggableLayerContainer leftTop={leftTop} level={level.value}>
-          <MapTileLayer leftTop={leftTop} level={level.value} />
+        <DraggableLayerContainer screenLeftTop={screenLeftTop} level={level.value}>
+          <MapTileLayer screenLeftTop={screenLeftTop} level={level.value} />
         </DraggableLayerContainer>
       </div>
-      <ToolBoxContainer level={level} leftTop={leftTop} />
+      <ToolBoxContainer level={level} screenLeftTop={screenLeftTop} />
     </div>
   );
 });

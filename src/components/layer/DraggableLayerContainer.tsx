@@ -1,23 +1,20 @@
 import { component$, Slot } from '@builder.io/qwik';
 import { getDraggableLayerPointHandlers } from '../../util/mouse_drag.ts';
 import { Point } from '../../type/Point.ts';
-import { getZoomScale } from '../../business/map/calculator.ts';
 
 type Props = {
   level: number;
-  leftTop: Point;
+  screenLeftTop: Point;
 }
 
-export const DraggableLayerContainer = component$(({ level, leftTop }: Props) => {
-  const scale = getZoomScale(level);
-
+export const DraggableLayerContainer = component$(({ screenLeftTop }: Props) => {
   const { onMouseDown, onMouseMove } = getDraggableLayerPointHandlers((point) => {
-    leftTop.x = point.x;
-    leftTop.y = point.y;
+    screenLeftTop.x = point.x;
+    screenLeftTop.y = point.y;
   });
 
   window.addEventListener('pointerdown', (e) => {
-    onMouseDown(leftTop, e.clientX, e.clientY);
+    onMouseDown(screenLeftTop, e.clientX, e.clientY);
     window.addEventListener('pointermove', onMouseMove);
   });
 
@@ -30,15 +27,15 @@ export const DraggableLayerContainer = component$(({ level, leftTop }: Props) =>
       position: 'absolute',
       top: 0,
       left: 0,
-      transform: `translate(${-1 * leftTop.x}px, ${-1 * leftTop.y}px)`,
+      transform: `translate(${-1 * screenLeftTop.x}px, ${-1 * screenLeftTop.y}px)`,
     }}>
     <div
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
-        transform: `scale(${scale})`,
-        transition: 'transform 0.5s',
+        // transform: `scale(${scale})`,
+        transition: 'transform 2.5s',
       }}>
       <Slot />
     </div>

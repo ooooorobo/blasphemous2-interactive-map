@@ -4,15 +4,15 @@ import { getTileRange, getTileSize } from '../../business/map/calculator.ts';
 import { generatePointListInRange } from '../../util/point.ts';
 import { makeRect } from '../../util/rect.ts';
 import { Point } from '../../type/Point.ts';
-import { getFileName, isValidPoint } from '../../business/map/tile.ts';
+import { getColumnCount, getFileName, isValidPoint } from '../../business/map/tile.ts';
 
 type Props = {
   level: number;
-  leftTop: Point;
+  screenLeftTop: Point;
 }
 
-export const MapTileLayer = component$(({ level, leftTop }: Props) => {
-  const windowRect = makeRect(leftTop, innerWidth, innerHeight);
+export const MapTileLayer = component$(({ level, screenLeftTop }: Props) => {
+  const windowRect = makeRect(screenLeftTop, innerWidth, innerHeight);
   const tileSize = getTileSize(level);
 
   const { start, last } = getTileRange(tileSize, windowRect, 3);
@@ -20,12 +20,12 @@ export const MapTileLayer = component$(({ level, leftTop }: Props) => {
 
   return <div>
     {tilePoints.map(({ x, y }) =>
-      isValidPoint(x, y) && <MapTile x={x} y={y} />,
+      isValidPoint(x, y, getColumnCount(level)) && <MapTile x={x} y={y} level={level} />,
     )}
   </div>;
 });
 
-const MapTile = component$(({ x, y }: { x: number, y: number }) => (
+const MapTile = component$(({ x, y, level }: { x: number, y: number; level: number }) => (
   <div
     key={x + ',' + y}
     style={{
@@ -36,7 +36,7 @@ const MapTile = component$(({ x, y }: { x: number, y: number }) => (
       height: ORIGINAL_TILE_SIZE,
       backgroundSize: 'contain',
       backgroundRepeat: 'no-repeat',
-      backgroundImage: `url(${getFileName(x, y)}`,
+      backgroundImage: `url(${getFileName(x, y, level)}`,
     }}>
     {x}, {y}
   </div>
