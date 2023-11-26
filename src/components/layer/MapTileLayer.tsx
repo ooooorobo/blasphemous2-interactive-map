@@ -1,10 +1,10 @@
 import { component$ } from '@builder.io/qwik';
 import { ORIGINAL_TILE_SIZE } from '../../business/map/constants.ts';
-import { getTileRange } from '../../business/map/calculator.ts';
+import { getTileRange, getZoomScale } from '../../business/map/calculator.ts';
 import { generatePointListInRange } from '../../util/point.ts';
 import { makeRect } from '../../util/rect.ts';
 import { Point } from '../../type/Point.ts';
-import { getColumnCount, getFileName, isValidPoint } from '../../business/map/tile.ts';
+import { getFileName, isValidPoint } from '../../business/map/tile.ts';
 
 type Props = {
   level: number;
@@ -20,7 +20,7 @@ export const MapTileLayer = component$(({ level, screenLeftTop, mapLeftTop }: Pr
 
   return <div class={'tile_layer'}>
     {tilePoints.map(({ x, y }) =>
-      isValidPoint(x, y, getColumnCount(level)) && <MapTile x={x} y={y} level={level} mapLeftTop={mapLeftTop} />,
+      isValidPoint(x, y, getZoomScale(level)) && <MapTile x={x} y={y} level={level} mapLeftTop={mapLeftTop} />,
     )}
   </div>;
 });
