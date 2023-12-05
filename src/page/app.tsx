@@ -14,30 +14,57 @@ import { MarkerLayer } from '../components/layer/MarkerLayer.tsx';
 
 export const localStorageKey = 'screenLeftTop';
 
+const calculateMapLeftTopByOriginPoint = ({ screenLeftTop, mapLeftTop, originPoint, prevLevel, nextLevel }: {
+  screenLeftTop: Point;
+  mapLeftTop: Point;
+  originPoint: Point;
+  prevLevel: number;
+  nextLevel: number;
+}) => {
+  const point = convertPointToOtherLeftTop(originPoint, screenLeftTop, mapLeftTop);
+  const scaleRatio = getZoomScale(nextLevel) / getZoomScale(prevLevel);
+  return convertLeftTopBy(mapLeftTop, point, scaleRatio);
+};
+
+const getLevelAfterZoom = (currentLevel: number, zoomType: ZoomType) => {
+  const changedValue = zoomType === 'in' ? 1 : -1;
+  return currentLevel + changedValue;
+};
+
+export type ZoomType = 'in' | 'out';
+
 export const App = component$(() => {
   const level = useSignal(MAX_ZOOM_LEVEL);
   const scale = getZoomScale(level.value);
 
-  const screenLeftTop = useStore<Point>(() => {
-    const defaultPosition = { x: 0, y: 0 };
-    try {
-      return JSON.parse(localStorage.getItem(localStorageKey) ?? JSON.stringify(defaultPosition));
-    } catch (e) {
-      return;
-    }
+  const screenLeftTop = useStore<Point>({ x: 0, y: 0 });
+  const mapLeftTop = useStore<Point>({
+    x: -(ORIGINAL_MAP_WIDTH - innerWidth) / 2,
+    y: -(ORIGINAL_MAP_HEIGHT - innerHeight) / 2,
   });
-  const mapLeftTop = useStore<Point>({ x: -(ORIGINAL_MAP_WIDTH - innerWidth) / 2, y: -(ORIGINAL_MAP_HEIGHT - innerHeight) / 2 });
+
+  const onZoom = $((zoomType: ZoomType, originPoint: Point) => {
+    if (!isValidLevel(getLevelAfterZoom(level.value, zoomType))) return;
+
+    const changedValue = zoomType === 'in' ? 1 : -1;
+    const { x, y } = calculateMapLeftTopByOriginPoint({
+      screenLeftTop,
+      mapLeftTop,
+      originPoint,
+      nextLevel: level.value + changedValue,
+      prevLevel: level.value,
+    });
+    mapLeftTop.x = x;
+    mapLeftTop.y = y;
+    level.value += changedValue;
+  });
+
 
   const onWheel = $(({ deltaY, clientX, clientY }: QwikWheelEvent) => {
-    const changedLevel = level.value + 1 * (deltaY > 0 ? 1 : -1);
-    if (!isValidLevel(changedLevel)) return;
+    const zoomType = deltaY > 0 ? 'in' : 'out';
+    if (!isValidLevel(getLevelAfterZoom(level.value, zoomType))) return;
 
-    const point = convertPointToOtherLeftTop({ x: clientX, y: clientY }, screenLeftTop, mapLeftTop);
-    const scaleRatio = getZoomScale(changedLevel) / getZoomScale(level.value);
-    const newMapLeftTop = convertLeftTopBy(mapLeftTop, point, scaleRatio);
-    mapLeftTop.x = newMapLeftTop.x;
-    mapLeftTop.y = newMapLeftTop.y;
-    level.value = changedLevel;
+    onZoom(zoomType, { x: clientX, y: clientY });
   });
 
   const onClick = $(({ clientX, clientY }: QwikMouseEvent) => {
@@ -57,6 +84,10 @@ export const App = component$(() => {
       <ToolBoxContainer
         level={level}
         screenLeftTop={screenLeftTop}
+        onZoom={$((zoomType: ZoomType) => onZoom(zoomType, {
+          x: screenLeftTop.x + innerWidth / 2,
+          y: screenLeftTop.y + innerHeight / 2,
+        }))}
       />
     </div>
   );
