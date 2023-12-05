@@ -10,6 +10,7 @@ import { MarkerList } from '../data/marker.ts';
 import { convertLeftTopBy, convertPointToOtherLeftTop } from '../util/point.ts';
 import { MarkerLayer } from '../components/layer/MarkerLayer.tsx';
 import { level, mapLeftTop, screenLeftTop, setLevel, setMapLeftTop } from '../signals/signal.ts';
+import { getPinchZoomHandlers } from '../util/pinch_zoom.ts';
 
 const calculateMapLeftTopByOriginPoint = ({ screenLeftTop, mapLeftTop, originPoint, prevLevel, nextLevel }: {
   screenLeftTop: Point;
@@ -49,6 +50,8 @@ export const App = () => {
     setLevel(level => level + changedValue);
   };
 
+  const { handlePointerMove, handlePointerUp } = getPinchZoomHandlers(onZoom);
+
   const onWheel = ({ deltaY, clientX, clientY }: WheelEvent) => {
     const zoomType = deltaY > 0 ? 'in' : 'out';
     if (!isValidLevel(getLevelAfterZoom(level(), zoomType))) return;
@@ -64,7 +67,13 @@ export const App = () => {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <div id={'map'} onWheel={onWheel} onClick={onClick}>
+      <div
+        id={'map'}
+        onWheel={onWheel}
+        onClick={onClick}
+        onTouchMove={handlePointerMove}
+        onTouchEnd={handlePointerUp}
+      >
         <DraggableLayerContainer>
           <MapTileLayer />
           <MarkerLayer markerList={MarkerList} scale={scale} />
