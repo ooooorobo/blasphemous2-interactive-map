@@ -1,7 +1,9 @@
-import '@builder.io/qwik/qwikloader.js';
+/* @refresh reload */
+import { render } from 'solid-js/web';
 
-import { render } from '@builder.io/qwik';
-import { App } from './app.tsx';
 import './index.css';
+import { App } from './app';
 
-render(document.getElementById('app') as HTMLElement, <App />);
+const root = document.getElementById('app');
+
+render(() => <App />, root!);

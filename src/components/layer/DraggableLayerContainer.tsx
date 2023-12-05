@@ -1,20 +1,14 @@
-import { component$, Slot } from '@builder.io/qwik';
 import { getDraggableLayerPointHandlers } from '../../util/mouse_drag.ts';
-import { Point } from '../../type/Point.ts';
+import { ParentProps } from 'solid-js';
+import { screenLeftTop, setScreenLeftTop } from '../../signals/signal.ts';
 
-type Props = {
-  level: number;
-  screenLeftTop: Point;
-}
+type Props = ParentProps;
 
-export const DraggableLayerContainer = component$(({ screenLeftTop }: Props) => {
-  const { onMouseDown, onMouseMove } = getDraggableLayerPointHandlers((point) => {
-    screenLeftTop.x = point.x;
-    screenLeftTop.y = point.y;
-  });
+export const DraggableLayerContainer = ({ children }: Props) => {
+  const { onMouseDown, onMouseMove } = getDraggableLayerPointHandlers(setScreenLeftTop);
 
   window.addEventListener('pointerdown', (e) => {
-    onMouseDown(screenLeftTop, e.clientX, e.clientY);
+    onMouseDown(screenLeftTop(), e.clientX, e.clientY);
     window.addEventListener('pointermove', onMouseMove);
   });
 
@@ -24,7 +18,7 @@ export const DraggableLayerContainer = component$(({ screenLeftTop }: Props) => 
 
   return <div
     class={'layer_container'}
-    style={{ transform: `translate(${-1 * screenLeftTop.x}px, ${-1 * screenLeftTop.y}px)` }}>
-    <Slot />
+    style={{ transform: `translate(${-1 * screenLeftTop().x}px, ${-1 * screenLeftTop().y}px)` }}>
+    {children}
   </div>;
-});
+};
