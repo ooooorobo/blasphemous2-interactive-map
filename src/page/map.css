@@ -42,3 +42,8 @@
     color: black;
     padding: 0 4px;
 }
+
+.marker.marked {
+    background-color: lightgray;
+    color: #888;
+}

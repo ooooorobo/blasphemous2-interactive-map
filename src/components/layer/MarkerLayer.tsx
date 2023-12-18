@@ -1,5 +1,6 @@
 import { Marker } from '../../data/marker.ts';
-import { mapLeftTop } from '../../signals/signal.ts';
+import { MARKED_MARKER_LIST_STORAGE_KEY } from '../../constants/localStorageKey.ts';
+import { MarkerView } from '../MarkerView.tsx';
 
 type Props = {
   markerList: Marker[];
@@ -7,16 +8,22 @@ type Props = {
 }
 
 export const MarkerLayer = (props: Props) => {
+  let markedMarkerList = JSON.parse(localStorage.getItem(MARKED_MARKER_LIST_STORAGE_KEY) ?? '[]') as Array<number>;
+
+  const onClickMarker = (id: number) => {
+    markedMarkerList = markedMarkerList.includes(id) ? markedMarkerList.filter(x => x !== id) : [...markedMarkerList, id];
+    localStorage.setItem(MARKED_MARKER_LIST_STORAGE_KEY, JSON.stringify(markedMarkerList));
+  };
+
   return (
     <div class={'marker_layer'}>
-      {props.markerList.map(({ position, type }) => (
-        <div
-          class={'marker'}
-          style={{
-            transform: `translate(${mapLeftTop().x + position.x * props.scale - 12}px, ${mapLeftTop().y + position.y * props.scale - 12}px)`,
-          }}
-        >{type}</div>
-      ))}
+      {props.markerList.map((data) =>
+        <MarkerView
+          data={data}
+          scale={props.scale}
+          initialMarked={markedMarkerList.includes(data.id)}
+          onClickMarker={onClickMarker}
+        />)}
     </div>
   );
 };
