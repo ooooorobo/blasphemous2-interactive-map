@@ -1,4 +1,5 @@
 import { Point } from '../type/Point.ts';
+import { IMAGE_BASE_URL } from '../constants/url.ts';
 
 type MarkerType =
   'SISTER' // 자매
@@ -29,6 +30,33 @@ export type Marker = {
   type: MarkerType;
   position: Point;
 }
+
+const MARKER_URL = IMAGE_BASE_URL + '/marker';
+export const DefaultMarkerImageMap: Record<MarkerType, string> = {
+  ABILITY: '',
+  ALTARPIECE: MARKER_URL + '/altarpiece.png',
+  BEAD: '',
+  BOSS: '',
+  CHALICE: MARKER_URL + '/chalice.png',
+  CHARIOT: '',
+  CHERUB: MARKER_URL + '/cherub.png',
+  CRYSTAL_SHARD: MARKER_URL + '/crystal_shard.png',
+  DAUGHTER: MARKER_URL + '/daughter.png',
+  FERVENT_KISS: MARKER_URL + '/fervent_kiss.png',
+  HIDDEN_SYMBOL: MARKER_URL + '/hidden_symbol.png',
+  MARTYRDOM: MARKER_URL + '/martyrdom.png',
+  NPC: '',
+  PRAYER: '',
+  QUEST_ITEM: '',
+  RECEPTACLE: MARKER_URL + '/receptacle.png',
+  ROSARY: MARKER_URL + '/rosary.png',
+  SISTER: MARKER_URL + '/sister.png',
+  TOOL: MARKER_URL + '/tool.png',
+  TRIBUTE: MARKER_URL + '/tribute.png',
+  WAXSEED: MARKER_URL + '/waxseed.png',
+  WEAPON: '',
+
+};
 
 export const MarkerList: Marker[] = [
   {

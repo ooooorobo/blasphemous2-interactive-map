@@ -32,8 +32,6 @@ export type ZoomType = 'in' | 'out';
 
 
 export const App = () => {
-  const scale = getZoomScale(level());
-
   const onZoom = (zoomType: ZoomType, originPoint: Point) => {
     if (!isValidLevel(getLevelAfterZoom(level(), zoomType))) return;
 
@@ -67,7 +65,7 @@ export const App = () => {
       <div id={'map'} onWheel={onWheel} onClick={onClick}>
         <DraggableLayerContainer>
           <MapTileLayer />
-          <MarkerLayer markerList={MarkerList} scale={scale} />
+          <MarkerLayer markerList={MarkerList} />
         </DraggableLayerContainer>
       </div>
       <ToolBoxContainer

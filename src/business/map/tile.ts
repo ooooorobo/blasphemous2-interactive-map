@@ -1,4 +1,5 @@
 import { ORIGINAL_MAP_HEIGHT, ORIGINAL_MAP_WIDTH, ORIGINAL_TILE_SIZE } from './constants.ts';
+import { IMAGE_BASE_URL } from '../../constants/url.ts';
 
 const columnCount: Record<string, number> = {
   '0': 10,
@@ -15,5 +16,5 @@ export const getColumnCount = (level: number) => {
 };
 
 export const getFileName = (x: number, y: number, level: number) => {
-  return import.meta.env.VITE_IMAGE_URL + `/tile/${level}/tile${(x + getColumnCount(level) * y).toString().padStart(3, '0')}.png`;
+  return IMAGE_BASE_URL + `/tile/${level}/tile${(x + getColumnCount(level) * y).toString().padStart(3, '0')}.png`;
 };

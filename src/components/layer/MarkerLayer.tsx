@@ -4,7 +4,6 @@ import { MarkerView } from '../MarkerView.tsx';
 
 type Props = {
   markerList: Marker[];
-  scale: number;
 }
 
 export const MarkerLayer = (props: Props) => {
@@ -20,7 +19,6 @@ export const MarkerLayer = (props: Props) => {
       {props.markerList.map((data) =>
         <MarkerView
           data={data}
-          scale={props.scale}
           initialMarked={markedMarkerList.includes(data.id)}
           onClickMarker={onClickMarker}
         />)}

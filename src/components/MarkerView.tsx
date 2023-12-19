@@ -1,16 +1,18 @@
 import { createSignal } from 'solid-js';
-import { mapLeftTop } from '../signals/signal.ts';
-import { Marker } from '../data/marker.ts';
+import { level, mapLeftTop } from '../signals/signal.ts';
+import { DefaultMarkerImageMap, Marker } from '../data/marker.ts';
+import { getZoomScale } from '../business/map/calculator.ts';
 
 type Props = {
   data: Marker;
-  scale: number;
   initialMarked: boolean;
   onClickMarker: (id: number) => void;
 }
 
-export const MarkerView = ({ data, scale, initialMarked, onClickMarker }: Props) => {
+export const MarkerView = ({ data, initialMarked, onClickMarker }: Props) => {
   const [marked, setMarked] = createSignal(initialMarked);
+  const scale = getZoomScale(level());
+  const imageUrl = DefaultMarkerImageMap[data.type];
   return (
     <div
       class={`marker ${marked() ? 'marked' : ''}`}
@@ -21,6 +23,6 @@ export const MarkerView = ({ data, scale, initialMarked, onClickMarker }: Props)
       style={{
         transform: `translate(${mapLeftTop().x + data.position.x * scale - 12}px, ${mapLeftTop().y + data.position.y * scale - 12}px)`,
       }}
-    >{data.type}</div>
+    >{imageUrl ? <img src={imageUrl} alt={data.type} width={'24px'} height={'24px'} /> : data.type}</div>
   );
 };
