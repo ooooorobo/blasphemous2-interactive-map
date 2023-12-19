@@ -11,7 +11,6 @@ type Props = {
 
 export const MarkerView = ({ data, initialMarked, onClickMarker }: Props) => {
   const [marked, setMarked] = createSignal(initialMarked);
-  const scale = getZoomScale(level());
   const imageUrl = DefaultMarkerImageMap[data.type];
   return (
     <div
@@ -21,7 +20,7 @@ export const MarkerView = ({ data, initialMarked, onClickMarker }: Props) => {
         onClickMarker(data.id);
       }}
       style={{
-        transform: `translate(${mapLeftTop().x + data.position.x * scale - 12}px, ${mapLeftTop().y + data.position.y * scale - 12}px)`,
+        transform: `translate(${mapLeftTop().x + data.position.x * getZoomScale(level()) - 12}px, ${mapLeftTop().y + data.position.y * getZoomScale(level()) - 12}px)`,
       }}
     >{imageUrl ? <img src={imageUrl} alt={data.type} width={'24px'} height={'24px'} /> : data.type}</div>
   );
