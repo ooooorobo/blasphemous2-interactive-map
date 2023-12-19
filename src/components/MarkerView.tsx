@@ -12,6 +12,10 @@ type Props = {
 export const MarkerView = ({ data, initialMarked, onClickMarker }: Props) => {
   const [marked, setMarked] = createSignal(initialMarked);
   const imageUrl = DefaultMarkerImageMap[data.type];
+  const zoomScale = () => getZoomScale(level());
+  const markerSize = () => 36 * getZoomScale(level());
+  const xPos = () => mapLeftTop().x + data.position.x * zoomScale() - markerSize() / 2,
+    yPos = () => mapLeftTop().y + data.position.y * zoomScale() - markerSize() / 2;
   return (
     <div
       class={`marker ${marked() ? 'marked' : ''}`}
@@ -19,9 +23,17 @@ export const MarkerView = ({ data, initialMarked, onClickMarker }: Props) => {
         setMarked(prev => !prev);
         onClickMarker(data.id);
       }}
-      style={{
-        transform: `translate(${mapLeftTop().x + data.position.x * getZoomScale(level()) - 12}px, ${mapLeftTop().y + data.position.y * getZoomScale(level()) - 12}px)`,
-      }}
-    >{imageUrl ? <img src={imageUrl} alt={data.type} width={'24px'} height={'24px'} /> : data.type}</div>
+      style={{ transform: `translate(${xPos()}px, ${yPos()}px)` }}
+    >
+      {imageUrl ?
+        <img
+          draggable={'false'}
+          src={imageUrl}
+          alt={data.type}
+          width={markerSize()}
+          height={markerSize()}
+        /> : data.type
+      }
+    </div>
   );
 };
