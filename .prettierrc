@@ -7,7 +7,6 @@
   "trailingComma": "all",
   "bracketSpacing": true,
   "jsxBracketSameLine": false,
-  "filepath": "src",
   "requirePragma": false,
   "insertPragma": false,
   "proseWrap": "never"
