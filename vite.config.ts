@@ -3,6 +3,6 @@ import solidPlugin from 'vite-plugin-solid';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/map/',
+  base: '/blasphemous2-interactive-map/',
   plugins: [solidPlugin()],
 });
